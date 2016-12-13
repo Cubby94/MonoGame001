@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections;
+using System;
 using MonoGame.Extended;
 
 namespace MonoGame001
@@ -16,6 +18,7 @@ namespace MonoGame001
         Texture2D grass;
         Texture2D writeTo;
         Color[] colorArray;
+        Random rand;
 
         Camera2D camera;
 
@@ -35,6 +38,9 @@ namespace MonoGame001
         {
             // TODO: Add your initialization logic here
             writeTo = new Texture2D(graphics.GraphicsDevice, 16, 16);
+
+            rand = new Random();
+
             base.Initialize();
         }
 
@@ -75,7 +81,15 @@ namespace MonoGame001
 
             for (int x = 0; x < colorArray.Length; x++)
             {
-                colorArray[x] = Color.White;
+                int intRand = rand.Next(0, 2);
+                if (intRand < 1)
+                {
+                    colorArray[x] = Color.White;
+                }
+                else
+                {
+                    colorArray[x] = Color.Blue;
+                }
             }
 
             writeTo.SetData<Color>(colorArray);

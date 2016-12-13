@@ -4,6 +4,6 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>c:/users/caleb/documents/visual studio 2015/Projects/MonoGame001/MonoGame001/Content/grass1.png</File>
+    <File>C:/Users/Caleb/Documents/Visual Studio 2015/Projects/MonoGame001/MonoGame001/Content/grass1.png</File>
   </SourceFiles>
 </SourceFileCollection>
