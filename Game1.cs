@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections;
 using System;
 using MonoGame.Extended;
+using MonoGame.Extended.ViewportAdapters;
 
 namespace MonoGame001
 {
@@ -37,9 +38,12 @@ namespace MonoGame001
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            var viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, 800, 480);
+
             writeTo = new Texture2D(graphics.GraphicsDevice, 16, 16);
 
             rand = new Random();
+            camera = new Camera2D(viewportAdapter);
 
             base.Initialize();
         }
@@ -77,6 +81,21 @@ namespace MonoGame001
                 Exit();
 
             // TODO: Add your update logic here
+
+            var keyboardState = Keyboard.GetState();
+            const float movementSpeed = 0.25f;
+
+            if (keyboardState.IsKeyDown(Keys.W))
+                camera.Move(new Vector2(0, movementSpeed) * gameTime.ElapsedGameTime.Milliseconds);
+            if (keyboardState.IsKeyDown(Keys.S))
+                camera.Move(new Vector2(0, -movementSpeed) * gameTime.ElapsedGameTime.Milliseconds);
+            if (keyboardState.IsKeyDown(Keys.A))
+                camera.Move(new Vector2(movementSpeed, 0) * gameTime.ElapsedGameTime.Milliseconds);
+            if (keyboardState.IsKeyDown(Keys.D))
+                camera.Move(new Vector2(-movementSpeed, 0) * gameTime.ElapsedGameTime.Milliseconds);
+            var mouseState = Mouse.GetState();
+            //_worldPosition = _camera.ScreenToWorld(new Vector2(mouseState.X, mouseState.Y));
+
             colorArray = new Color[256];
 
             for (int x = 0; x < colorArray.Length; x++)
@@ -103,7 +122,8 @@ namespace MonoGame001
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
+            var transformMatrix = camera.GetViewMatrix();
+            spriteBatch.Begin(transformMatrix: transformMatrix);
             spriteBatch.Draw(writeTo, new Rectangle(0,0,16,16), Color.White);
             spriteBatch.End();
 
