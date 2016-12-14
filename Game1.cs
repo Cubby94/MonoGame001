@@ -16,9 +16,13 @@ namespace MonoGame001
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        int worldSizeSquare;
+
+        int[,] terrainArray;
+
         Texture2D grass;
-        Texture2D writeTo;
-        Color[] colorArray;
+        Texture2D dirt;
+
         Random rand;
 
         Camera2D camera;
@@ -38,14 +42,25 @@ namespace MonoGame001
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            worldSizeSquare = 64;
             var viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, 800, 480);
-
-            writeTo = new Texture2D(graphics.GraphicsDevice, 16, 16);
-
             rand = new Random();
+            terrainArray = new int[worldSizeSquare, worldSizeSquare];
+            for (int x = 0; x < worldSizeSquare; x++)
+            {
+                for (int y = 0; y < worldSizeSquare; y++)
+                {
+                    terrainArray[x, y] = rand.Next(0, 2);
+                }
+            }
+
             camera = new Camera2D(viewportAdapter);
 
             base.Initialize();
+            graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+            graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+            graphics.IsFullScreen = true;
+            graphics.ApplyChanges();
         }
 
         /// <summary>
@@ -57,6 +72,8 @@ namespace MonoGame001
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             grass = this.Content.Load<Texture2D>("grass1");
+            dirt = Content.Load<Texture2D>("DirtTerrain");
+
 
             // TODO: use this.Content to load your game content here
         }
@@ -86,32 +103,24 @@ namespace MonoGame001
             const float movementSpeed = 0.25f;
 
             if (keyboardState.IsKeyDown(Keys.W))
-                camera.Move(new Vector2(0, movementSpeed) * gameTime.ElapsedGameTime.Milliseconds);
-            if (keyboardState.IsKeyDown(Keys.S))
                 camera.Move(new Vector2(0, -movementSpeed) * gameTime.ElapsedGameTime.Milliseconds);
+            if (keyboardState.IsKeyDown(Keys.S))
+                camera.Move(new Vector2(0, movementSpeed) * gameTime.ElapsedGameTime.Milliseconds);
             if (keyboardState.IsKeyDown(Keys.A))
-                camera.Move(new Vector2(movementSpeed, 0) * gameTime.ElapsedGameTime.Milliseconds);
-            if (keyboardState.IsKeyDown(Keys.D))
                 camera.Move(new Vector2(-movementSpeed, 0) * gameTime.ElapsedGameTime.Milliseconds);
+            if (keyboardState.IsKeyDown(Keys.D))
+                camera.Move(new Vector2(movementSpeed, 0) * gameTime.ElapsedGameTime.Milliseconds);
+            if (keyboardState.IsKeyDown(Keys.PageUp))
+            {
+                camera.ZoomIn(0.1f);
+            }
+            if (keyboardState.IsKeyDown(Keys.PageDown))
+            {
+                camera.ZoomOut(0.1f);
+            }
             var mouseState = Mouse.GetState();
             //_worldPosition = _camera.ScreenToWorld(new Vector2(mouseState.X, mouseState.Y));
 
-            colorArray = new Color[256];
-
-            for (int x = 0; x < colorArray.Length; x++)
-            {
-                int intRand = rand.Next(0, 2);
-                if (intRand < 1)
-                {
-                    colorArray[x] = Color.White;
-                }
-                else
-                {
-                    colorArray[x] = Color.Blue;
-                }
-            }
-
-            writeTo.SetData<Color>(colorArray);
             base.Update(gameTime);
         }
 
@@ -124,7 +133,23 @@ namespace MonoGame001
             GraphicsDevice.Clear(Color.CornflowerBlue);
             var transformMatrix = camera.GetViewMatrix();
             spriteBatch.Begin(transformMatrix: transformMatrix);
-            spriteBatch.Draw(writeTo, new Rectangle(0,0,16,16), Color.White);
+
+            for (int x = 0; x < worldSizeSquare; x++)
+            {
+                for (int y = 0; y < worldSizeSquare; y++)
+                {
+                    if (terrainArray[x, y] == 0)
+                    {
+                        spriteBatch.Draw(grass, new Rectangle(x * 16, y * 16, 16, 16), Color.White);
+                    }
+                    else
+                    {
+                        spriteBatch.Draw(dirt, new Rectangle(x * 16, y * 16, 16, 16), Color.White);
+                    }
+                }
+            }
+
+            
             spriteBatch.End();
 
             // TODO: Add your drawing code here

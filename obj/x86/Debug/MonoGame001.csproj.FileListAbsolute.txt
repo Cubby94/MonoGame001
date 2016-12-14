@@ -25,3 +25,4 @@ c:\users\caleb\documents\visual studio 2015\Projects\MonoGame001\MonoGame001\obj
 c:\users\caleb\documents\visual studio 2015\Projects\MonoGame001\MonoGame001\obj\x86\Debug\MonoGame001.pdb
 c:\users\caleb\documents\visual studio 2015\Projects\MonoGame001\MonoGame001\bin\Windows\x86\Debug\Content\grass1.xnb
 c:\users\caleb\documents\visual studio 2015\Projects\MonoGame001\MonoGame001\bin\Windows\x86\Debug\MonoGame.Extended.dll
+C:\Users\Caleb\Documents\Visual Studio 2015\Projects\MonoGame001\MonoGame001\bin\Windows\x86\Debug\Content\DirtTerrain.xnb
